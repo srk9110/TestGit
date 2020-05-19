@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1000,
+    "name": "Collect {0} Golds",
+    "goal": 10000,
+    "reward_id": 2000,
+    "reward_amount": 5,
+    "res_name": "mission_img_collect"
+  },
+  {
+    "id": 1001,
+    "name": "Play {0} times",
+    "goal": 500,
+    "reward_id": 2002,
+    "reward_amount": 10,
+    "res_name": "mission_img_goal"
+  },
+  {
+    "id": 1002,
+    "name": "Kill {0} monsters",
+    "goal": 300,
+    "reward_id": 2001,
+    "reward_amount": 300,
+    "res_name": "mission_img_kill"
+  },
+  {
+    "id": 1003,
+    "name": "New Episode open",
+    "goal": 0,
+    "reward_id": 2002,
+    "reward_amount": 5,
+    "res_name": "mission_img_key"
+  },
+  {
+    "id": 1004,
+    "name": "Reach Level {0}",
+    "goal": 10,
+    "reward_id": 2002,
+    "reward_amount": 10,
+    "res_name": "mission_img_crown"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 2000,
+    "name": "soulgem",
+    "res_name": "mission_btn_icon_soulgem"
+  },
+  {
+    "id": 2001,
+    "name": "coin",
+    "res_name": "mission_btn_icon_coin"
+  },
+  {
+    "id": 2002,
+    "name": "gem",
+    "res_name": "mission_btn_icon_gem"
+  }
+]
