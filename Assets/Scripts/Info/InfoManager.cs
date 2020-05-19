@@ -1,20 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class InfoManager 
+public class InfoManager    //Info들을 관리하는 클래스
 {
-    private static InfoManager instance;
-    public MissionInfo missionInfo;
+    private static InfoManager instance;    //싱글톤
+
+    public GameInfo gameInfo;
+    public UnityAction<int> OnCompleteMission;
 
     private InfoManager()
     {
 
     }
 
-    private static InfoManager GetInstance()
+    public static InfoManager GetInstance()
     {
-        if(InfoManager.instance==null)
+        if (InfoManager.instance == null)
         {
             InfoManager.instance = new InfoManager();
             return InfoManager.instance;
@@ -22,12 +25,49 @@ public class InfoManager
         return InfoManager.instance;
     }
 
-    public void Init(MissionInfo newInfo)
+    public void Init(GameInfo gameInfo = null)
     {
-        for(int i=0; i<missionInfo.arrGoalcount.Length; i++)
+        if (gameInfo == null)
         {
-            Debug.Log(this.missionInfo.arrGoalcount[i]);
+            this.gameInfo = new GameInfo();
+        }
+
+        else
+        {
+            this.gameInfo = gameInfo;
         }
     }
-    
+
+    public void DoMission(int id, int count)
+    {
+        var info = this.gameInfo.missionInfoList.Find(x => x.Id == id);
+
+        var data = DataManager.GetInstance().GetMissionData(id);
+
+        if (info.Count < data.goal)
+        {
+            info.Count += count;
+
+            if (info.Count >= data.goal)
+            {
+                if (info.IsComplete == false)
+                {
+                    info.IsComplete = true;
+                    this.OnCompleteMission(info.Id);
+                }
+
+            }
+
+            var missionName = string.Format(data.name, data.goal);
+
+            Debug.LogFormat("미션 {0} {1}회 실행", missionName, info.Count);
+        }
+
+        else
+        {
+            Debug.Log("미션이 완료되었습니다.");
+        }
+
+
+    }
 }

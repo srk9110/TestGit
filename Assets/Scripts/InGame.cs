@@ -4,61 +4,42 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using Newtonsoft.Json;
 
 public class InGame : MonoBehaviour
 {
-    public Button[] arrGoalBtns;
-    public Text[] arrTextes;
-    public Button saveBtn;
+    public UIInGame uiInGame;
 
-    private int[] arrCounts;
-    private int[] arrGoal;
-    private List<MissionData> missionList;
-    private MissionInfo info;
-
-    private void Start()
+    public void Init()
     {
-        this.arrCounts = new int[this.arrGoalBtns.Length];
-        this.arrGoal = new int[this.arrGoalBtns.Length];
+        this.uiInGame = GameObject.FindObjectOfType<UIInGame>();
 
-        for(int i=0; i<this.arrGoal.Length; i++)
+        Debug.Log("InGame: Init");
+        this.uiInGame.Init();
+        for (int i = 0; i < this.uiInGame.arrUiBinderMission.Length; i++)
         {
-            this.arrGoal[i] = missionList[i].goal;
-        }
+            var uiBinderMission = this.uiInGame.arrUiBinderMission[i];
+            var idx = i;
 
 
-        for(int i=0; i<this.arrGoalBtns.Length; i++)
-        {
-            int idx = i;
-            this.arrGoalBtns[idx].onClick.AddListener(() =>
+            uiBinderMission.OnClick = (id) =>
             {
-                arrTextes[idx].text = this.arrCounts[idx].ToString()+" / "+this.arrGoal[idx].ToString();
-                this.arrCounts[idx]++;
-                this.info.arrGoalcount[idx] = this.arrCounts[idx]-1;
-                Debug.Log(this.info.arrGoalcount[idx]);
-            });
+                InfoManager.GetInstance().DoMission(id, 1);
+
+                //info변경이 없으면 ui업데이트를 안함
+                this.uiInGame.UpdateUI();
+
+            };
+
         }
-
-        this.saveBtn.onClick.AddListener(() =>
+        this.uiInGame.btnSave.onClick.AddListener(() =>
         {
-            this.SaveData();
+            GameInfo gameInfo = InfoManager.GetInstance().gameInfo;
+            string json = JsonConvert.SerializeObject(gameInfo);
+            File.WriteAllText(Application.persistentDataPath + "/gameInfo.json", json);
+            Debug.Log(json);
+            Debug.Log("save");
         });
-
     }
 
-    public void Init(List<MissionData> list, MissionInfo info)
-    {
-        this.info = info;
-        this.missionList = list;
-    }
-
-    private void SaveData()
-    {
-        string saveJson = JsonConvert.SerializeObject(this.info);
-        Debug.Log(saveJson);
-
-        Debug.Log(Application.persistentDataPath+"/game_info.json");
-
-        File.WriteAllText(Application.persistentDataPath+"/game_info.json", saveJson);
-    }
 }

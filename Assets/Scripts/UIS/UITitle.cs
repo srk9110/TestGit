@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JetBrains.Annotations;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,7 @@ public class UITitle : MonoBehaviour
 
     public Button addFriendBtn;
     public Button faceBookBtn;
-    public Button playBtn;
+    public Button btnStart;
 
     public GameObject heartBtnGo;
     public GameObject goldBtnGo;
@@ -34,11 +35,12 @@ public class UITitle : MonoBehaviour
 
     private MissionInfo info;
 
-    public enum eMenuTypes 
+    public enum eMenuTypes
     { Items, Shop, Messages, Mission, Ranking, Settings }
 
     void Start()
     {
+
 
         //Budget 하트충전 버튼
         this.uiBinderHeart.addBtn.onClick.AddListener(() =>
@@ -60,28 +62,10 @@ public class UITitle : MonoBehaviour
 
 
 
-        //상점 알림 on/off
-        if (this.showNotiShopIcon)
-        {
-            this.notiShopIconGo.SetActive(true);
-        }
-        else
-        {
-            this.notiShopIconGo.SetActive(false);
-        }
 
         //메세지 알림 on/off
         this.uiBinderNotiMessege.Init(this.mailCount);
 
-        //미션 알림 on/off
-        if (this.showNotiMisstionIcon)
-        {
-            this.notiMisstionGo.SetActive(true);
-        }
-        else
-        {
-            this.notiMisstionGo.SetActive(false);
-        }
 
         //메뉴 버튼 세팅
         for (int i = 0; i < this.arrBtnMenus.Length; i++)
@@ -92,15 +76,15 @@ public class UITitle : MonoBehaviour
         }
 
         //메뉴 버튼 액션
-        for(int i=0; i<this.arrBtnMenus.Length; i++)
+        for (int i = 0; i < this.arrBtnMenus.Length; i++)
         {
             int index = i;
 
             var btnMenu = this.arrBtnMenus[i];
             btnMenu.btn.onClick.AddListener(() =>
             {
-                Debug.LogFormat("idx: {0}, type: {1}",index,(eMenuTypes)index);
-                
+                Debug.LogFormat("idx: {0}, type: {1}", index, (eMenuTypes)index);
+
             });
         }
 
@@ -118,56 +102,41 @@ public class UITitle : MonoBehaviour
 
 
 
-        DataManager.GetInstance().Load();
+        //DataManager.GetInstance().Load();
 
-        if(File.Exists(Application.persistentDataPath+"/game_info.json"))
-        {
-            string loadJson = File.ReadAllText(Application.persistentDataPath+"/game_info.json");
-            Debug.Log(loadJson);
+        //if(File.Exists(Application.persistentDataPath+"/game_info.json"))
+        //{
+        //    string loadJson = File.ReadAllText(Application.persistentDataPath+"/game_info.json");
+        //    this.info = JsonConvert.DeserializeObject<MissionInfo>(loadJson);
+        //}
+        //else
+        //{           
+        //    this.info = new MissionInfo();
+        //}
 
-            MissionInfo newInfo = new MissionInfo();
-            newInfo = JsonConvert.DeserializeObject<MissionInfo>(loadJson);
+        //List<MissionData> missionList = DataManager.GetInstance().GetMissionData();
 
-            for (int i=0; i<newInfo.arrGoalcount.Length; i++)
-            {
-                Debug.LogFormat("기존 info : {0}",this.info.arrGoalcount[i]);
-                Debug.LogFormat("새 인포: {0}",newInfo.arrGoalcount[i]);
-                this.info.arrGoalcount[i] = newInfo.arrGoalcount[i];
-                Debug.Log(this.info.arrGoalcount[i]);
-
-            }
-          
-           
-
-        }
-        else
-        {           
-            this.info = new MissionInfo();
-        }
-
-        List<MissionData> missionList = DataManager.GetInstance().GetMissionData();
-
-        //가져온 값 출력
-        foreach(var data in missionList)
-        {
-            RewardData rewardData = DataManager.GetInstance().GetRewardDataById(data.reward_id);
-            string name = string.Format(data.name, data.goal);
-            Debug.LogFormat("id: {0},\tname: {1}\tgoal: {2:N0}\t보상타입: {3}\t보상 양: {4}"
-                ,data.id,name,data.goal,rewardData.name,data.reward_amount);
-        }
+        ////가져온 값 출력
+        //foreach(var data in missionList)
+        //{
+        //    RewardData rewardData = DataManager.GetInstance().GetRewardDataById(data.reward_id);
+        //    string name = string.Format(data.name, data.goal);
+        //    Debug.LogFormat("id: {0},\tname: {1}\tgoal: {2:N0}\t보상타입: {3}\t보상 양: {4}"
+        //        ,data.id,name,data.goal,rewardData.name,data.reward_amount);
+        //}
 
 
-        //게임실행 버튼
-        this.playBtn.onClick.AddListener(() =>
-        {
-            SceneManager.sceneLoaded += (Scene arg0, LoadSceneMode arg1) =>
-            {
-                InGame inGame = GameObject.FindObjectOfType<InGame>();
-                inGame.Init(missionList,this.info);
-            };
+        ////게임실행 버튼
+        //this.playBtn.onClick.AddListener(() =>
+        //{
+        //    SceneManager.sceneLoaded += (Scene arg0, LoadSceneMode arg1) =>
+        //    {
+        //        InGame inGame = GameObject.FindObjectOfType<InGame>();
+        //        inGame.Init(missionList,this.info);
+        //    };
 
-            SceneManager.LoadScene("InGame");
-        });
+        //    SceneManager.LoadScene("InGame");
+        //});
 
         //버튼 배열 다르게 가져오는 방법
         //this.btnMenu.OnClick = (idx) =>
@@ -177,5 +146,20 @@ public class UITitle : MonoBehaviour
 
 
     }
+
+    public void ShowNotificationShopIcon()
+    {
+        //상점 알림 on/off
+        this.notiMisstionGo.SetActive(true);
+
+    }
+    public void HideNotificationShopIcon()
+    {
+        //상점 알림 on/off
+        this.notiMisstionGo.SetActive(false);
+
+    }
+
+
 
 }

@@ -43,11 +43,16 @@ public class DataManager
     {
         List<MissionData> list = new List<MissionData>();
 
-        foreach(KeyValuePair<int, MissionData> pair in this.dicMissonDatas)
+        foreach (KeyValuePair<int, MissionData> pair in this.dicMissonDatas)
         {
             list.Add(pair.Value);
         }
         return list;
+    }
+
+    public MissionData GetMissionData(int id)
+    {
+        return this.dicMissonDatas[id];
     }
 
     public RewardData GetRewardDataById(int id)
